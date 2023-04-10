@@ -1,8 +1,22 @@
+<script setup>
+  import { Modal, Input } from 'flowbite-vue'
+  import { ref } from 'vue'
+
+  const showPasswordModal = ref(false)
+  function closeModal() {
+    showPasswordModal.value = false;
+    document.getElementById('login-main-container').classList.remove('is-blurred')
+  }
+  function showModal() {
+    showPasswordModal.value = true;
+    document.getElementById('login-main-container').classList.add('is-blurred')
+  }
+</script>
+
+
 <template>
-  <div class="">
-    <div class="logo-container">
-    </div>
-    <div class=" login-container flex min-h-full flex-col justify-center py-12 px-6 sm:px-6 lg:px-8">
+  <div>
+    <div id="login-main-container" class="login-container flex min-h-full flex-col justify-center py-12 px-6 sm:px-6 lg:px-8">
       <div class="xl:grid xl:grid-cols-3 xl:items-center">
         <img class="hidden xl:block" src="@/assets/workout.png" alt="">
         <div
@@ -33,7 +47,7 @@
                 </div>
 
                 <div class="text-sm">
-                  <a href="#" class="font-medium text-primary hover:text-indigo-500">Forgot your password?</a>
+                  <a href="#" @click="showModal()" class="font-medium text-primary hover:text-indigo-500">Forgot your password?</a>
                 </div>
               </div>
 
@@ -106,7 +120,29 @@
         <img class="hidden xl:block" src="@/assets/timer.png" alt="">
       </div>
     </div>
-
+    <transition name="fade">
+    <Modal size="lg" v-if="showPasswordModal" @close="closeModal">
+      <template #header>
+        <div class="flex items-center text-base font-light">
+          Recover Password
+        </div>
+      </template>
+      <template #body>
+        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400 mb-4">
+          Enter the email address associated with your account
+        </p>
+        <Input placeholder="email"/>
+        <div class="flex justify-end mt-4">
+          <button @click="closeModal" type="button" class="mr-4 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+            Cancel
+          </button>
+          <button @click="closeModal" type="button" class="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            Send Reset Link
+          </button>
+        </div>
+      </template>
+    </Modal>
+  </transition>
   </div>
 </template>
 
@@ -136,6 +172,26 @@ export default {
 
 .google-icon {
   max-width: 24px;
+}
+
+.is-blurred {
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+  transition: all 0.1s ease-in-out;
+}
+.fade-enter-from{
+  opacity:0;
+  transform: scale(2);
+}
+.fade-enter-active{
+  transition: all 0.1s ease-in-out;
+}
+.fade-leave-to{
+  opacity:1;
+  transform: scale(1);
+}
+.fade-leave-active{
+  transition: all 0.1s linear;
 }
 
 @media (min-width: 1024px) {
