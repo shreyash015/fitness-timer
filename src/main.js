@@ -6,4 +6,8 @@ import router from '@/plugins/router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+import { faCirclePlus, faPalette, faStopwatch20, faFaceGrinBeamSweat  } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faCirclePlus, faPalette, faStopwatch20, faFaceGrinBeamSweat)
+
 createApp(App).use(router).component('font-awesome-icon', FontAwesomeIcon).mount('#app')
