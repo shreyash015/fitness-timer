@@ -38,7 +38,7 @@
 
     <hr class="mt-10">
     <div class="mt-6 md:max-w-xs md:ml-auto">
-      <router-link to="/intro"
+      <router-link to="/profile-creation"
         class="flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
         Get Started
       </router-link>

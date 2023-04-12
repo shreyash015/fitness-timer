@@ -2,6 +2,8 @@ import { createWebHistory, createRouter } from "vue-router";
 import Login from '@/views/Login.vue'
 import SignUp from '@/views/SignUp.vue'
 import IntroPage from '@/views/IntroPage.vue'
+import ProfileCreation from '@/views/ProfileCreation.vue'
+
 
 
 const routes = [
@@ -21,6 +23,12 @@ const routes = [
     path: "/intro",
     name: "IntroPage",
     component: IntroPage,
+    meta: { transition: 'route' }
+  },
+  {
+    path: "/profile-creation",
+    name: "ProfileCreation",
+    component: ProfileCreation,
     meta: { transition: 'route' }
   },
 ];
