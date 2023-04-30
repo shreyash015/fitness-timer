@@ -4,6 +4,7 @@ import { Cropper } from 'vue-advanced-cropper'
 import { Modal } from 'flowbite-vue'
 import { ref } from 'vue'
 import 'vue-advanced-cropper/dist/style.css';
+import CircleStencil from '@/components/CircleStencil.vue';
 </script>
 
 <template>
@@ -18,8 +19,13 @@ import 'vue-advanced-cropper/dist/style.css';
     <div class="lg:grid lg:grid-cols-4 lg:items-start">
 
       <div class="flex justify-center items-center flex-col mt-8 lg:flex-start lg:items-start">
-        <font-awesome-icon class="border-4 p-12 rounded-full" :icon="['fas', 'camera']" size="2xl"
+        <div class="" v-if="!croppedImage">
+          <font-awesome-icon class="border-4 p-12 rounded-full" :icon="['fas', 'camera']" size="2xl"
           style="color:#b7b8b8" />
+        </div>
+        <div class="" v-else>
+          <img class="rounded-full w-36 h-36" :src="croppedImage" alt="">
+        </div>
         <input ref="fileInput" id="fileUpload" type="file" @change="pickFile" hidden>
         <button @click="uploadFiles()"
           class="flex w-32 mt-6 justify-center border border-primary rounded-md bg-white px-3 py-2 text-sm font-semibold text-primary shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
@@ -125,12 +131,28 @@ import 'vue-advanced-cropper/dist/style.css';
     </div>
   </div>
   <Modal size="4xl" v-if="isShowModal" @close="closeModal">
-      <template #body>
-        <cropper class="cropper" :src="previewImage" :stencil-props="{
-          aspectRatio: 10 / 12
-        }" @change="change" />
+    <template #body>
+      <cropper class="cropper" :src="previewImage" :stencil-props="{
+          aspectRatio: 10 / 12,
+          movable: true,
+		      resizable: false,
+        }" :stencil-size="{
+      width: 320,
+      height: 320
+    }"
+    :stencil-component="CircleStencil"
+    image-restriction="stencil"
+     @change="change" />
+
+    </template>
+    <template #footer>
+        <div class="flex justify-end">
+          <button @click="getCroppedImage" type="button" class="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            Crop Image
+          </button>
+        </div>
       </template>
-    </Modal>
+  </Modal>
 </template>
 
 <script>
@@ -144,7 +166,15 @@ export default {
       currentWeight: 84,
       goalWeight: 70,
       previewImage: null,
-      isShowModal:false,
+      isShowModal: false,
+      coordinates: {
+				width: 0,
+				height: 0,
+				left: 0,
+				top: 0,
+			},
+			image: null,
+      croppedImage: null,
     }
   },
   methods: {
@@ -156,6 +186,14 @@ export default {
         orientation: 'center',
         format: 'dd/mm/yy'
       });
+    },
+    change ({ coordinates, canvas }) {
+      this.coordinates = coordinates;
+      this.image = canvas.toDataURL();
+    },
+    getCroppedImage() {
+      this.isShowModal = false;
+      this.croppedImage = this.image;
     },
     uploadFiles() {
       document.getElementById("fileUpload").click();
@@ -176,7 +214,7 @@ export default {
         this.$emit('input', file[0]);
       }
     },
-    closeModal(){
+    closeModal() {
       this.isShowModal = false;
     },
     handleFileUpload(e) {
