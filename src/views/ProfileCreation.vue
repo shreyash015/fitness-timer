@@ -184,7 +184,7 @@ export default {
         autohide: false,
         todayBtn: false,
         orientation: 'center',
-        format: 'dd/mm/yy'
+        format: 'dd/mm/yyyy'
       });
     },
     change ({ coordinates, canvas }) {
