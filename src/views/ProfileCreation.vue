@@ -1,5 +1,8 @@
 <script setup>
 import Datepicker from 'flowbite-datepicker/Datepicker';
+import { Cropper } from 'vue-advanced-cropper'
+import { Modal } from 'flowbite-vue'
+import { ref } from 'vue'
 import 'vue-advanced-cropper/dist/style.css';
 </script>
 
@@ -17,8 +20,7 @@ import 'vue-advanced-cropper/dist/style.css';
       <div class="flex justify-center items-center flex-col mt-8 lg:flex-start lg:items-start">
         <font-awesome-icon class="border-4 p-12 rounded-full" :icon="['fas', 'camera']" size="2xl"
           style="color:#b7b8b8" />
-          <img :src="previewImage" class="w-8 h-8 border"/>
-        <input ref="file" id="fileUpload" type="file" v-on:change="handleFileUpload($event)" hidden>
+        <input ref="fileInput" id="fileUpload" type="file" @change="pickFile" hidden>
         <button @click="uploadFiles()"
           class="flex w-32 mt-6 justify-center border border-primary rounded-md bg-white px-3 py-2 text-sm font-semibold text-primary shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
           Upload photo
@@ -122,16 +124,27 @@ import 'vue-advanced-cropper/dist/style.css';
       </router-link>
     </div>
   </div>
+  <Modal size="4xl" v-if="isShowModal" @close="closeModal">
+      <template #body>
+        <cropper class="cropper" :src="previewImage" :stencil-props="{
+          aspectRatio: 10 / 12
+        }" @change="change" />
+      </template>
+    </Modal>
 </template>
 
 <script>
 export default {
   name: 'ProfileCreation',
+  components: {
+    Cropper,
+  },
   data() {
     return {
       currentWeight: 84,
       goalWeight: 70,
-      previewImage: null
+      previewImage: null,
+      isShowModal:false,
     }
   },
   methods: {
@@ -146,6 +159,25 @@ export default {
     },
     uploadFiles() {
       document.getElementById("fileUpload").click();
+    },
+    selectImage() {
+      this.$refs.fileInput.click();
+    },
+    pickFile() {
+      let input = this.$refs.fileInput;
+      let file = input.files;
+      if (file && file[0]) {
+        let reader = new FileReader
+        reader.onload = e => {
+          this.previewImage = e.target.result;
+          this.isShowModal = true;
+        }
+        reader.readAsDataURL(file[0]);
+        this.$emit('input', file[0]);
+      }
+    },
+    closeModal(){
+      this.isShowModal = false;
     },
     handleFileUpload(e) {
       console.log(e)
