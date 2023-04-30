@@ -196,7 +196,6 @@ export default {
       this.croppedImage = this.image;
     },
     uploadFiles() {
-      console.log('here')
       document.getElementById("fileUpload").click();
     },
     selectImage() {
